@@ -1,33 +1,21 @@
 #!/bin/bash
-IP_DIR=/etc/sysconfig/network-scripts/
+IP_DIR=/data
+IP_FILE=ifcfg-ens33
 IPADDR=192.168.31.133
-cp $IP_DIRifcfg-ens33 $IP_DIRifcfg-ens33.bak
-grep -hi 'dhcp' $IP_DIRifcfg-ens33
-if [ $?=0 ];then
-  cat > $IP_DIRifcfg-ens33 <<- EOF
-    TYPE=Ethernet
-    BOOTPROTO=static
-    DEFROUTE=yes
-    PEERDNS=yes
-    PEERROUTES=yes
-    IPV4_FAILURE_FATAL=no
-    IPV6INIT=yes
-    IPV6_AUTOCONF=yes
-    IPV6_DEFROUTE=yes
-    IPV6_PEERDNS=yes
-    IPV6_PEERROUTES=yes
-    IPV6_FAILURE_FATAL=no
-    IPV6_ADDR_GEN_MODE=stable-privacy
-    NAME=ens33
-    UUID=c5a0683e-bd47-4dd3-a3ca-063b944372ec
-    DEVICE=ens33
-    ONBOOT=yes
-    IPADDR=$IPADDR
-    NETMASK=255.255.255.0
-    GATEWAY=192.168.31.2
-    DNS1=202.96.134.133
-  EOF
+cp $IP_DIR/$IP_FILE $IP_DIR/$IP_FILE.bak
+grep dhcp $IP_DIR/$IP_FILE >> /dev/null 2>&1
+if [ $? -eq 0 ]; then
+  sed -i "s/dhcp/static/g" $IP_DIR/$IPFILE
+  echo "IPADDR=$IPADDR"
+  echo "NETMASK=255.255.255.0"
+  echo "GATEWAY=192.168.31.2"
+  echo "DNS1=202.96.134.133"
 else
-  echo "nothing to do !"
-  exit 1
+  grep 192.168.31.133 $IP_DIR/$IP_FILE >> /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    echo "nothing to do"
+    exit 1
+  else
+    sed -i "s/`grep IPADDR $IP_DIR/$IP_FILE|sed 's/IPADDR=//g'`/$IPADDR/g" $IP_DIR/$IP_FILE
+  fi                  
 fi
