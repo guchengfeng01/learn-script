@@ -1,21 +1,21 @@
 #!/bin/bash
-IP_DIR=/data
-IP_FILE=ifcfg-ens33
+IP_DIR=/etc/sysconfig/network-scripts
+IPFILE=ifcfg-ens33
 IPADDR=192.168.31.133
-cp $IP_DIR/$IP_FILE $IP_DIR/$IP_FILE.bak
+cp $IP_DIR/$IP_FILE $IP_DIR/$IPFILE.bak
 grep dhcp $IP_DIR/$IP_FILE >> /dev/null 2>&1
 if [ $? -eq 0 ]; then
   sed -i "s/dhcp/static/g" $IP_DIR/$IPFILE
-  echo "IPADDR=$IPADDR"
-  echo "NETMASK=255.255.255.0"
-  echo "GATEWAY=192.168.31.2"
-  echo "DNS1=202.96.134.133"
+  echo "IPADDR=$IPADDR" >> $IP_DIR/$IPFILE
+  echo "NETMASK=255.255.255.0" >> $IP_DIR/$IPFILE
+  echo "GATEWAY=192.168.31.2" >> $IP_DIR/$IPFILE
+  echo "DNS1=202.96.134.133" >> $IP_DIR/$IPFILE
 else
-  grep 192.168.31.133 $IP_DIR/$IP_FILE >> /dev/null 2>&1
+  grep $IPADDR $IP_DIR/$IPFILE >> /dev/null 2>&1
   if [ $? -eq 0 ]; then
     echo "nothing to do"
     exit 1
   else
-    sed -i "s/`grep IPADDR $IP_DIR/$IP_FILE|sed 's/IPADDR=//g'`/$IPADDR/g" $IP_DIR/$IP_FILE
+    sed -i "s/`grep IPADDR $IP_DIR/$IPFILE|sed 's/IPADDR=//g'`/$IPADDR/g" $IP_DIR/$IPFILE
   fi                  
 fi
