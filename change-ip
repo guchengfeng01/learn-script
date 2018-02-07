@@ -1,9 +1,9 @@
 #!/bin/bash
 IP_DIR=/etc/sysconfig/network-scripts
 IPFILE=ifcfg-ens33
-IPADDR=192.168.31.133
 cp $IP_DIR/$IP_FILE $IP_DIR/$IPFILE.bak
-grep dhcp $IP_DIR/$IP_FILE >> /dev/null 2>&1
+read -p "Enter ip addr: " IPADDR
+grep -hi 'dhcp' $IP_DIR/$IP_FILE >> /dev/null 2>&1
 if [ $? -eq 0 ]; then
   sed -i "s/dhcp/static/g" $IP_DIR/$IPFILE
   echo "IPADDR=$IPADDR" >> $IP_DIR/$IPFILE
