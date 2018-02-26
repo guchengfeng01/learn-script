@@ -3,7 +3,7 @@ IP_DIR=/etc/sysconfig/network-scripts
 IPFILE=ifcfg-ens33
 
 if [ ! -f $IP_DIR/$IPFILE-`date +%F`.bak]; then
-  cp $IP_DIR/$IP_FILE $IP_DIR/$IPFILE-`date +%F`.bak
+  cp $IP_DIR/$IP_FILE $IP_DIR/$IP_FILE-`date +%F`.bak
 fi
 
 read -p "Enter ip addr: " IPADDR
